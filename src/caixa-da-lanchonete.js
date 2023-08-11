@@ -69,21 +69,25 @@ return this.valorFinal(metodoDePagamento,pedidosSet)
     
     }
         valorFinal(formaDePagamento,pedidos){
+            const opcoes = { style: "decimal", minimumFractionDigits: 2, maximumFractionDigits: 2, useGrouping: false };
             switch (formaDePagamento) {
                 case "dinheiro":
                     var soma = 0;
                    pedidos.forEach((pedido)=>soma += pedido.quant * pedido.preco)  
                     soma = soma - (soma *0.05 ) 
-                return soma;
+                    soma = soma.toLocaleString("pt-br",opcoes);
+                return `R$ ${soma}`;
                 case "credito":
                     var soma = 0;
                     pedidos.forEach((pedido)=>soma += pedido.quant * pedido.preco)  
                      soma = soma + (soma *0.03 ) 
-                return soma;
+                     soma = soma.toLocaleString("pt-br",opcoes);
+                     return `R$ ${soma}`;
                 case "debito":
                     var soma = 0;
                     pedidos.forEach((pedido)=>soma += pedido.quant * pedido.preco) 
-                return soma;
+                    soma = soma.toLocaleString("pt-br",opcoes);
+                    return `R$ ${soma}`;
 
                 default:
                     return"Forma de pagamento inválida!";
