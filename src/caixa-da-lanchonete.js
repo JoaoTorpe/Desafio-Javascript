@@ -3,9 +3,18 @@ class CaixaDaLanchonete {
     
     calcularValorDaCompra(metodoDePagamento, itens) {
         //Separa os nomes das quantidades
+
+        if(itens.length === 0){
+            return "Não há itens no carrinho de compra!"
+        }
+
         const itemsNames = itens.map((item)=>item.split(",")[0]);
         const itemsQuant = itens.map((item)=>item.split(",")[1]);
-               
+        
+        if(itemsQuant.some((itemQuant)=>itemQuant=== "0")){
+            return "Quantidade inválida!";
+        }
+
         //Cria objetos com o nome e a quantidade
         const pedidosSet = new Set();
         for(let i = 0; i< itens.length;i++){
@@ -18,6 +27,13 @@ class CaixaDaLanchonete {
             //Armazena em um Set para evitar repetição
             pedidosSet.add(itemDopedido);
         }
+            if(  [... pedidosSet].some((pedido)=> this.itemExiste(pedido.name)===false)){
+                return "Item inválido!"
+            }
+            if(  [... pedidosSet].some((pedido)=> pedido.name === null)){
+                return "Não há itens no carrinho de compra!"
+            }
+
 
         if([... pedidosSet].some((pedido)=> pedido.name === "chantily")  || [... pedidosSet].some((pedido)=> pedido.name === "queijo") ){
             
@@ -47,12 +63,9 @@ class CaixaDaLanchonete {
 else{
 
 
-console.log("O valor final: "+ this.valorFinal(metodoDePagamento,pedidosSet)   )
+return this.valorFinal(metodoDePagamento,pedidosSet) 
 }
 
-        console.log(pedidosSet)
-
-        return "";
     
     }
         valorFinal(formaDePagamento,pedidos){
@@ -69,9 +82,12 @@ console.log("O valor final: "+ this.valorFinal(metodoDePagamento,pedidosSet)   )
                 return soma;
                 case "debito":
                     var soma = 0;
-                    pedidos.forEach((pedido)=>soma += pedido.quant * pedido.preco)  
-                     
+                    pedidos.forEach((pedido)=>soma += pedido.quant * pedido.preco) 
                 return soma;
+
+                default:
+                    return"Forma de pagamento inválida!";
+
         }
     }
 
@@ -105,10 +121,31 @@ console.log("O valor final: "+ this.valorFinal(metodoDePagamento,pedidosSet)   )
             case "combo2":
                 return 7.50;
             default:
-                return 0; 
+                return "item inválido"; 
         }
     }
-
+itemExiste(itemName) {
+        switch (itemName) {
+            case "cafe":
+                return true;
+            case "chantily":
+                return true;
+            case "suco":
+                return true;
+            case "sanduiche":
+                return true;
+            case "queijo":
+                return true ;
+            case "salgado":
+                return true;
+            case "combo1":
+                return true;
+            case "combo2":
+                return true;
+            default:
+                return false; 
+        }
+    }
 
 
 
@@ -119,4 +156,4 @@ export { CaixaDaLanchonete };
 const caixa = new CaixaDaLanchonete();
 
 
-console.log( caixa.calcularValorDaCompra("dinheiro",['sanduiche,1','chantily,1'])  )
+console.log( caixa.calcularValorDaCompra("credito",['combo1,1','cafe,2'])  )
