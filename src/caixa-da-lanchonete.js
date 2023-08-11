@@ -19,9 +19,10 @@ class CaixaDaLanchonete {
             pedidosSet.add(itemDopedido);
         }
 
-        if( pedidosSet.has("chantily")  ||pedidosSet.has("queijo")   ){
-        if(pedidosSet.has("chantily")){
-            let validacao = this.validarCafe(pedidosSet)
+        if([... pedidosSet].some((pedido)=> pedido.name === "chantily")  || [... pedidosSet].some((pedido)=> pedido.name === "queijo") ){
+            
+        if( [... pedidosSet].some((pedido)=> pedido.name === "chantily") ){
+            let validacao = this.validarCafe([...pedidosSet])
 
             if(validacao === false){
                 return "Item extra não pode ser pedido sem o principal";
@@ -32,8 +33,8 @@ class CaixaDaLanchonete {
             }
 
         }
-        if(pedidosSet.has("queijo")){
-            let validacao = this.validarSanduiche(pedidosSet)
+        if([... pedidosSet].some((pedido)=> pedido.name === "queijo") ){
+            let validacao = this.validarSanduiche([...pedidosSet])
 
             if(validacao === false){
                 return "Item extra não pode ser pedido sem o principal";
@@ -57,21 +58,29 @@ console.log("O valor final: "+ this.valorFinal(metodoDePagamento,pedidosSet)   )
         valorFinal(formaDePagamento,pedidos){
             switch (formaDePagamento) {
                 case "dinheiro":
-                    let soma = 0;
+                    var soma = 0;
                    pedidos.forEach((pedido)=>soma += pedido.quant * pedido.preco)  
                     soma = soma - (soma *0.05 ) 
                 return soma;
-                
-
+                case "credito":
+                    var soma = 0;
+                    pedidos.forEach((pedido)=>soma += pedido.quant * pedido.preco)  
+                     soma = soma + (soma *0.03 ) 
+                return soma;
+                case "debito":
+                    var soma = 0;
+                    pedidos.forEach((pedido)=>soma += pedido.quant * pedido.preco)  
+                     
+                return soma;
         }
     }
 
 
         validarCafe(pedidosSet){
-            return pedidosSet.has("cafe")
+            return [... pedidosSet].some((pedido)=> pedido.name === "cafe")
         }
         validarSanduiche(pedidosSet){
-            return pedidosSet.has("sanduiche")
+            return [... pedidosSet].some((pedido)=> pedido.name === "sanduiche")
         }
 
 
@@ -109,4 +118,5 @@ export { CaixaDaLanchonete };
 
 const caixa = new CaixaDaLanchonete();
 
-caixa.calcularValorDaCompra("dinheiro",['cafe,1','chantily,1'])
+
+console.log( caixa.calcularValorDaCompra("dinheiro",['sanduiche,1','chantily,1'])  )
